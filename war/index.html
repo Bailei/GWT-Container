@@ -1,0 +1,68 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <select id="selectGame">
+      <option selected>TicTacToeGame
+      <option>ApiTesterGame
+    </select>
+    <textarea rows="5" cols="80" id="debug" readonly></textarea><br/>
+    
+    <iframe id="iframe1" style="height:300px; width:800px"></iframe>
+    <br>
+    <iframe id="iframe2" style="height:300px; width:800px"></iframe>
+    
+    <script type="text/javascript">
+      var state;
+      function initState() {
+        state = { playersIframe : []};
+      }
+      function debug(message) {
+        document.getElementById("debug").value += message + "\n";
+      }
+      function send(source, message) {
+        debug("Sending: " + JSON.stringify(message));
+        //var source = document.getElementById("iframe1").contentWindow;
+        source.postMessage(message, "*");
+      }
+      function sendGameState() {
+        for (var i = 0; i < 2; i++) {
+          send(state.playersIframe[i], {"type" : "StartGame", "state": state.gameState, "yourPlayerId" : i, "playerIds" : [0, 1]});
+        }
+      }
+      function listener(event) {
+        var data = event.data;
+        debug("Received: " + JSON.stringify(data));
+        var type = data.type;
+        if (type == "GameReady") {
+          state.playersIframe.push(event.source);
+          if (state.playersIframe.length == 2) {
+            // start game
+            state.gameState = {};
+            sendGameState();
+          }
+        } else if (type == "MoveDone") {
+          var operations = data.operations;
+          for (var i = 0; i < operations.length; i++) {
+            var operation = operations[i];
+            if (operation.type = "Set") {
+              state.gameState[operation.key] = operation.value;
+            }
+          }
+          sendGameState();
+        }
+      }
+      document.getElementById("selectGame").onchange = selectGameChanged;
+      function selectGameChanged() {
+        var selectedGame = document.getElementById("selectGame").value + ".html";
+        document.getElementById("debug").value = "";
+        debug("Game is: " + selectedGame);
+        initState();
+        document.getElementById("iframe1").src = selectedGame;
+        document.getElementById("iframe2").src = selectedGame;
+      }
+      window.addEventListener("message", listener, false);
+      selectGameChanged();
+    </script>
+  </body>
+</html>

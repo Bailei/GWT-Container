@@ -1,0 +1,35 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>API Tester game</h1>
+    <textarea rows="10" cols="80" id="debug" readonly></textarea><br/>
+    
+    <input type="text" id="inputGameReady" value='{"type" : "GameReady"}' readonly><input type="button" id="buttonGameReady" value="send GameReady"><br/>
+    
+    <input type="text" id="inputMoveDone" size="80" value='{"type" : "MoveDone", "operations" : [{"type": "set", "key":"0", "value": 42}]}'> <input type="button" id="buttonMoveDone" value="send MoveDone"><br/>
+     
+    <script type="text/javascript">
+      function debug(message) {
+        document.getElementById("debug").value += message + "\n";
+      }
+      function send(message) {
+        debug("Sending: " + JSON.stringify(message));
+        window.parent.postMessage(message, "*");
+      }
+      function listener(event) {
+        debug("Received: " + JSON.stringify(event.data));
+      }
+      function setOnclick(type) {
+        document.getElementById("button" + type).onclick = function () {
+          send(JSON.parse(document.getElementById("input" + type).value));
+        };
+      }
+      var types = ['GameReady', 'MoveDone'];
+      for (var i = 0; i < types.length; i++) {
+        setOnclick(types[i]);
+      }
+      window.addEventListener("message", listener, false);
+    </script>
+  </body>
+</html>
