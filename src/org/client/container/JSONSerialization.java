@@ -176,7 +176,7 @@ public class JSONSerialization {
         for(int i = 0; i< operationList.size();i++)
         {
             String key = (String)operationList.get(i);
-            Object value = operationList.get(i+1);
+            Object value = operationList.get(++i);
             
             //JSONValue valueObject = new JSONObject();
             if(value instanceof Integer  ){
