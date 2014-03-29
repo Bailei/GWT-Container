@@ -103,20 +103,35 @@ public class Server {
 	  }
 	}
 	
+//    public native void sendMessage(String jsonStringMessage, String url) /*-{
+//  	  var xhr;
+//  	  if ($wnd.XMLHttpRequest) {
+//  	    xhr = new XMLHttpRequest();
+//  	  }else {
+//  	    xhr = new ActiveXObject("Microsoft.XMLHTTP");	
+//  	  }
+//  	  xhr.onreadystatechange = function() {
+//  	    this.@org.client.container.Server.InsertNewMatchMessageListener::receivedMessage(Ljava/lang/String;) (xhr.responseText);
+//  	  }
+//  	  xhr.open("POST", url, true);
+//  	  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+//  	  xhr.send(jsonStringMessage);
+//    }-*/; 
+    
     public native void sendMessage(String jsonStringMessage, String url) /*-{
-  	  var xhr;
-  	  if ($wnd.XMLHttpRequest) {
-  	    xhr = new XMLHttpRequest();
-  	  }else {
-  	    xhr = new ActiveXObject("Microsoft.XMLHTTP");	
-  	  }
-  	  xhr.onreadystatechange = function() {
-  	    this.@org.client.container.Server.InsertNewMatchMessageListener::receivedMessage(Ljava/lang/String;) (xhr.responseText);
-  	  }
-  	  xhr.open("POST", url, true);
-  	  xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-  	  xhr.send(jsonStringMessage);
-    }-*/; 
+      $.ajax({
+        url: url, 
+        type: 'POST',
+        data: jsonStringMessage,
+        success: function(data, textStatus, jqXHR) { 
+            this.@org.client.container.Server.InsertNewMatchMessageListener::receivedMessage(Ljava/lang/String;) (data); 
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+           this.@org.client.container.Server.InsertNewMatchMessageListener::receivedMessage(Ljava/lang/String;) (jqXHR.responseText); 
+        }
+        });
+  }-*/; 
+    
   }
 	
   public void sendMakeMove(JSONArray operations) {
@@ -175,20 +190,34 @@ public class Server {
       }
     }
     
+//    public native void sendMessage(String jsonStringMessage, String url) /*-{
+//      var xhr;
+//      if($wnd.XMLHttpRequest) {
+//        xhr = new XMLHttpRequest();
+//      }else {
+//        xhr = new ActiveXObject("Microsoft.XMLHTTP");
+//      }
+//      xhr.onreadystatechange = function() {
+//        this.@org.client.container.Server.MakeMoveMessageListener::receivedMessage(Ljava/lang/String;) (xhr.responseText);
+//      }
+//      xhr.open("POST", url, true);
+//      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//      xhr.send(jsonStringMessage);
+//    }-*/;
+    
     public native void sendMessage(String jsonStringMessage, String url) /*-{
-      var xhr;
-      if($wnd.XMLHttpRequest) {
-        xhr = new XMLHttpRequest();
-      }else {
-        xhr = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      xhr.onreadystatechange = function() {
-        this.@org.client.container.Server.MakeMoveMessageListener::receivedMessage(Ljava/lang/String;) (xhr.responseText);
-      }
-      xhr.open("POST", url, true);
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.send(jsonStringMessage);
-    }-*/;
+    $.ajax({
+        url: url, 
+        type: "POST",
+        data: jsonStringMessage,
+        success: function(data, textStatus, jqXHR) {
+            this.@org.client.container.Server.MakeMoveMessageListener::receivedMessage(Ljava/lang/String;) (data); 
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            this.@org.client.container.Server.MakeMoveMessageListener::receivedMessage(Ljava/lang/String;) (jqXHR.responseText); 
+        }});
+  }-*/;
+    
   }
   
   public void getMatchInfo() {
@@ -249,18 +278,30 @@ public class Server {
       }
     }
     
+//    public native void sendMessage(String url) /*-{
+//      var xhr;
+//      if($wnd.XMLHttpRequest) {
+//        xhr = new XMLHttpRequest();
+//      }else {
+//      	xhr = new ActiveXObject("Microsoft.XMLHTTP");
+//      }
+//      xhr.onreadystatechange = function() {
+//        this.@org.client.container.Server.GetMatchInfoMessageListener::receivedMessage(Ljava/lang/String;) (xhr.responseText);
+//      }
+//      xhr.open("GET", url, true);
+//      xhr.send();
+//    }-*/;
+    
     public native void sendMessage(String url) /*-{
-      var xhr;
-      if($wnd.XMLHttpRequest) {
-        xhr = new XMLHttpRequest();
-      }else {
-      	xhr = new ActiveXObject("Microsoft.XMLHTTP");
-      }
-      xhr.onreadystatechange = function() {
-        this.@org.client.container.Server.GetMatchInfoMessageListener::receivedMessage(Ljava/lang/String;) (xhr.responseText);
-      }
-      xhr.open("GET", url, true);
-      xhr.send();
-    }-*/;
+     $.ajax({
+        url: url, 
+        type: "GET",
+        success: function(data, textStatus, jqXHR) {
+            this.@org.client.container.Server.GetMatchInfoMessageListener::receivedMessage(Ljava/lang/String;) (data); 
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          this.@org.client.container.Server.GetMatchInfoMessageListener::receivedMessage(Ljava/lang/String;) (jqXHR.responseText);
+        }});
+  }-*/;
   }
 }
