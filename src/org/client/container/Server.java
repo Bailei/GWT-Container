@@ -124,13 +124,7 @@ public class Server {
         type: 'POST',
         data: jsonStringMessage,
         success: function(data, textStatus, jqXHR) { 
-//            console.log(data);
-//            if(data["error"] == undefined) {
-//                matchId = parseInt(data['matchId']);
-//            }
-            this.@org.client.container.Server.InsertNewMatchMessageListener::receivedMessage(Ljava/lang/String;) (data);
-//            ok(true);
-//            start();  
+            this.@org.client.container.Server.InsertNewMatchMessageListener::receivedMessage(Ljava/lang/String;) (data); 
         },
         error: function(jqXHR, textStatus, errorThrown) {
            this.@org.client.container.Server.InsertNewMatchMessageListener::receivedMessage(Ljava/lang/String;) (jqXHR.responseText); 
@@ -217,10 +211,7 @@ public class Server {
         type: "POST",
         data: jsonStringMessage,
         success: function(data, textStatus, jqXHR) {
-            this.@org.client.container.Server.MakeMoveMessageListener::receivedMessage(Ljava/lang/String;) (data);
-//            console.log(data);
-//            ok(true);
-//            start();  
+            this.@org.client.container.Server.MakeMoveMessageListener::receivedMessage(Ljava/lang/String;) (data); 
         },
         error: function(jqXHR, textStatus, errorThrown) {
             this.@org.client.container.Server.MakeMoveMessageListener::receivedMessage(Ljava/lang/String;) (jqXHR.responseText); 
@@ -306,11 +297,7 @@ public class Server {
         url: url, 
         type: "GET",
         success: function(data, textStatus, jqXHR) {
-            this.@org.client.container.Server.GetMatchInfoMessageListener::receivedMessage(Ljava/lang/String;) (data);
-//            var j = JSON.parse(data);
-//            console.log(data);
-//            ok(true);
-//            start();  
+            this.@org.client.container.Server.GetMatchInfoMessageListener::receivedMessage(Ljava/lang/String;) (data); 
         },
         error: function(jqXHR, textStatus, errorThrown) {
           this.@org.client.container.Server.GetMatchInfoMessageListener::receivedMessage(Ljava/lang/String;) (jqXHR.responseText);
