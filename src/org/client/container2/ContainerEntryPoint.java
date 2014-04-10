@@ -35,13 +35,10 @@ public class ContainerEntryPoint implements EntryPoint {
 	    String request = res.get("request").isString().stringValue();
 	    switch (request) {
 	      case "SEND_ENTER_QUEUE": {
-	    	//***********************************************************
-	    	//test("Receive Send enter queue in Container entry point");
 	        gameContainer.sendEnterQueue(res.get("gameId").isString());
 	        break;
 	      }
 	      case "SEND_MAKE_MOVE": {
-	    	//test("receive send make move");
 	    	gameContainer.sendMakeMove(res.get("move").isArray());
 	        break;
 	      }
@@ -60,8 +57,7 @@ public class ContainerEntryPoint implements EntryPoint {
 	  },
 	  false);
 	}-*/;
-	
-	//the following code is used for testing
+
 	private static native void test(String message) /*-{
 	  alert(message);
 	}-*/;

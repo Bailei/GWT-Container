@@ -20,6 +20,14 @@ public class ContainerEntryPoint implements EntryPoint {
 	  setListener();
 	  gameContainer = new GameContainer();
 	  
+	  Button start = new Button("start");
+	  start.addClickHandler(new ClickHandler() {
+	    @Override
+	    public void onClick(ClickEvent event) {
+	      gameContainer.gameStart();
+	    }
+	  });
+	  
       Button refresh = new Button("refresh");
       refresh.addClickHandler(new ClickHandler() {
         @Override
@@ -28,8 +36,18 @@ public class ContainerEntryPoint implements EntryPoint {
         }
       });
       
+      Button end = new Button("End");
+      end.addClickHandler(new ClickHandler() {
+        @Override
+        public void onClick(ClickEvent event) {
+          gameContainer.endGame();
+        }
+      });
+      
       FlowPanel flowPanel = new FlowPanel();
+      flowPanel.add(start);
       flowPanel.add(refresh);
+      flowPanel.add(end);
       RootPanel.get("mainDiv").add(flowPanel);     
 	}
 	
@@ -38,7 +56,7 @@ public class ContainerEntryPoint implements EntryPoint {
 	  if(res != null) {
 	    String request = res.get("request").isString().stringValue();
 	    switch (request) {
-	      case "INERT_NEW_MATCH": {
+	      case "INSERT_NEW_MATCH": {
 	    	String gameId = res.get("gameId").isString().stringValue();
 	    	List<String> playerIds = Lists.newArrayList();
 	    	JSONArray playerIdsJSON = res.get("playerIds").isArray();

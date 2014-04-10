@@ -31,19 +31,6 @@ public class JSONSerialization {
     private final String END_GAME = "EndGame";
     private final String SET_RANDOM_INTEGER = "SetRandomInteger";
     private final String GAME_STATE = "gameState";
-//    private final String KEY = "key";
-//    private final String VALUE = "value";
-//    private final String VISIBLE_TO_PLAYER_IDS = "visibleToPlayerIds";
-//    private final String ALL = "ALL";
-//    private final String FROM = "from";
-//    private final String TO = "to";
-//    private final String PLAYER_ID = "playerId";
-//    private final String NUMBER_OF_SECONDS_FOR_TURN = "numberOfSecondsForTurn";
-//    private final String PLAYER_ID_TO_TOKEN_CHANGE = "playerIdToTokenChange";
-//    private final String PLAYER_ID_TO_NUMBER_OF_TOKENS_IN_POT = "playerIdToNumberOfTokensInPot";
-//    private final String KEYS = "keys";
-//    private final String PLAYER_ID_TO_SCORE = "playerIdToScore";
-//    private final String WINNER_PLAYER_ID = "winnerPlayerId";
     
     public JSONArray serializeMove(List<Operation> move){
 
@@ -57,7 +44,6 @@ public class JSONSerialization {
                 operationJSON.put(TYPE, new JSONString(SET));
                 List<Object> tmpList = set.getFieldsNameAndValue();
                 getOperationJSONObject(tmpList, operationJSON);
-               // res.set(i, operationJSON);
             } else if (operation instanceof SetRandomInteger) {
                 SetRandomInteger setRandomInteger = (SetRandomInteger) operation;
                 operationJSON.put(TYPE, new JSONString(SET_RANDOM_INTEGER));
@@ -114,71 +100,14 @@ public class JSONSerialization {
         return res;
     }
     
-//    @SuppressWarnings("unchecked")
-//    public void getSetOperationJSONArray(Set set, JSONArray setArray) {
-//        
-//          //Set set = (Set) operation;
-//          String key = set.getKey();
-//          Object value = set.getValue();
-//          
-//          //List<Object> setList = set.getFieldsNameAndValue();
-//          JSONObject keyJSONObject = new JSONObject();
-//          keyJSONObject.put("key", new JSONString(key));
-//          setArray.set(0, keyJSONObject);
-//          
-//          JSONObject valueObject = new JSONObject();
-//          if(value instanceof Integer  ){
-//              valueObject.put("value", new JSONNumber((Integer)value));
-//          }else if(value instanceof Double){
-//              valueObject.put("value", new JSONNumber((Double)value));
-//          }else if(value instanceof String){
-//              valueObject.put("value", new JSONString((String)value));
-//          }else if(value instanceof Boolean){
-//              valueObject.put("value", JSONBoolean.getInstance((Boolean)value));
-//          }else if(value instanceof List){
-//              JSONArray valueList = new JSONArray();
-//              convertListToJSONArray((List<Object>)value, valueList);
-//              valueObject.put("value", valueList);
-//          }else if (value instanceof Map) {
-//              JSONObject mapObject = new JSONObject();
-//              convertMapToJSONObject((Map<String, Object>)value, mapObject);
-//              valueObject.put("value", mapObject);   
-//          }else {
-//              throw new IllegalArgumentException(
-//                      "The Set.value is neither a basic type nor a list or map And object=" + value);
-//        }
-//          
-//          setArray.set(1, valueObject);
-//          
-//          JSONObject visibleToPlayerIdsJSON = new JSONObject();
-//          Object visibleToPlayerIds = set.getVisibleToPlayerIds();
-//          if(visibleToPlayerIds instanceof String)
-//          {
-//              visibleToPlayerIdsJSON.put("visibleToPlayerIds", new JSONString("ALL"));
-//          }else if (visibleToPlayerIds instanceof List) {
-//              JSONArray visibleToPlayerIdsArray = new JSONArray();
-//              convertListToJSONArray((List<Object>)visibleToPlayerIds, visibleToPlayerIdsArray);
-//              visibleToPlayerIdsJSON.put("visibleToPlayerIds", visibleToPlayerIdsArray);
-//          }else {
-//              throw new IllegalArgumentException(
-//                      "The Set.visibleToPlayerIds is neither a basic type nor a list or map And object=" + visibleToPlayerIds);
-//          }
-//          
-//          setArray.set(2, visibleToPlayerIdsJSON);
-//           
-//        }
-    
     @SuppressWarnings("unchecked")
     public void getOperationJSONObject(List<Object> operationList, JSONObject operationJSON) {
         
-        //Set set = (Set) operation;
-        //int i = 0;
         for(int i = 0; i< operationList.size();i++)
         {
             String key = (String)operationList.get(i);
-            Object value = operationList.get(i+1);
+            Object value = operationList.get(++i);
             
-            //JSONValue valueObject = new JSONObject();
             if(value instanceof Integer  ){
                operationJSON.put(key, new JSONNumber((Integer)value));
             }else if(value instanceof Double){

@@ -4,11 +4,11 @@ import com.google.gwt.json.client.*;
 
 public class GameContainer {  
   private final GameServer gameServer = new GameServer();
-  //private String myPlayerId = "5685265389584384";
-  //private String accessSignature = "7b72415da6285972c675ff5a39e7f691";
+  //private String myPlayerId = "4812957531766784";
+  //private String accessSignature = "ab0a72e65ac347f20160503ecd814dfa";
   
-  private String myPlayerId = "5757334940811264";
-  private String accessSignature = "1d99145115e1c57fd4fecbdab3903086";
+  private String myPlayerId = "6022506221666304";
+  private String accessSignature = "e574f5726c00421bec1cfd05e7c5af5";
 	
   public GameContainer() {
   }
@@ -22,7 +22,6 @@ public class GameContainer {
   }
   
   public void sendMakeMove(JSONArray move) {
-	//test("send make move in container");
    	gameServer.sendMakeMove(move);
   }
   

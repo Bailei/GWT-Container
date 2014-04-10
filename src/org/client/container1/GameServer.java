@@ -8,11 +8,11 @@ import java.util.Set;
 
 public class GameServer {
 
-  private final String url = "http://1-dot-smg-server.appspot.com/";
+  private final String url = "http://3-dot-smg-container-server3.appspot.com/";
   
   //for optimization
   private JSONString accessSignature = null;
-  private JSONString matchId;
+  private JSONString matchId = null;
   private GameContainer gameContainer;
   private JSONString gameId = null;
   private JSONArray playerIds = new JSONArray();
@@ -26,12 +26,40 @@ public class GameServer {
     ServerMessageListener.setServer(this);
   }
   
+  public JSONString getMatchId() {
+    return matchId;
+  }
+  
+  public void setMyPlayerId(JSONString myPlayerId) {
+    this.myPlayerId = myPlayerId;
+  }
+ 
+  public void setGameContainer(GameContainer gameContainer) {
+    this.gameContainer = gameContainer;
+  }
+  
+  public void setAccessSignature(JSONString accessSignature) {
+    this.accessSignature = accessSignature;
+  }
+  
+  public void setGameId(JSONString gameId) {
+    this.gameId = gameId;
+  }
+  
   public void setMatchId(JSONString matchId) {
     this.matchId = matchId;
   }
   
+  public void setPlayerIds(JSONArray playerIds) {
+    this.playerIds = playerIds;
+  }
+  
   public GameContainer getGameContainer() {
     return gameContainer;
+  }
+  
+  public JSONArray getMyLastMove() {
+    return myLastMove;
   }
   
   public void sendInsertNewMatch(
@@ -40,7 +68,7 @@ public class GameServer {
       List<String> playerIds, 
       GameContainer gameContainer,
       String myPlayerId) {
-	  
+	
 	this.myPlayerId = new JSONString(myPlayerId);
 	this.gameContainer = gameContainer;
     this.accessSignature = new JSONString(accessSignature);
@@ -63,33 +91,22 @@ public class GameServer {
   
   private native void sendMessage1(String message, String url) /*-{
     var xmlHttp;
-	  if($wnd.XMLHttpRequest){
-	    xmlHttp = new XMLHttpRequest();
-	  }else{
-	    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-	  }
-      xmlHttp.onreadystatechange = function() {
-        if(xmlHttp.readyState==4 && xmlHttp.status==200) {
-          var response = xmlHttp.responseText;
-          @org.client.container1.ServerMessageListener::messageListener(Ljava/lang/String;) (response);
-        }
-      }  
+	if($wnd.XMLHttpRequest){
+	  xmlHttp = new XMLHttpRequest();
+	}else{
+	  xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+    xmlHttp.onreadystatechange = function() {
+      if(xmlHttp.readyState==4 && xmlHttp.status==200) {
+        var response = xmlHttp.responseText;
+        @org.client.container1.ServerMessageListener::messageListener1(Ljava/lang/String;) (response);
+      }
+    }  
     xmlHttp.open("POST", url, true);
     xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
     xmlHttp.send(message);
   }-*/;
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-	
   public void sendMakeMove(JSONArray operations) {
 
 	myLastMove = operations;
@@ -104,10 +121,10 @@ public class GameServer {
 	postInfo.put("operations", operations);
 	String message = postInfo.toString();
 
-	sendMessage3(message, integratedUrl);
+	sendMessage2(message, integratedUrl);
   }
   
-  private native void sendMessage3(String message, String url) /*-{
+  private native void sendMessage2(String message, String url) /*-{
     var xmlHttp;
 	if($wnd.XMLHttpRequest){
 	  xmlHttp = new XMLHttpRequest();
@@ -115,43 +132,29 @@ public class GameServer {
 	  xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
 	}
     xmlHttp.onreadystatechange = function() {
-      if(xmlHttp.readyState==4 && xmlHttp.status==500) {
-        alert("message too long????");
-      } 
       if(xmlHttp.readyState==4 && xmlHttp.status==200) {
-      	alert("successful!!");
         var response = xmlHttp.responseText;
-        @org.client.container1.ServerMessageListener::messageListener(Ljava/lang/String;) (response);
+        @org.client.container1.ServerMessageListener::messageListener2(Ljava/lang/String;) (response);
       }
     }  
     xmlHttp.open("POST", url, true);
     xmlHttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    //xmlHttp.send(JSON.stringify(jsonObjTmp));
-    //xmlHttp.send(JSON.stringify(jsonObj));
     xmlHttp.send(message);
   }-*/;
   
-  public void getMatchInfo() {
+  public void getNewMatchInfo() {
     StringBuilder sb = new StringBuilder(url);
-	sb.append("matches/")
-	  .append(matchId.stringValue())
-	  .append("?")
-	  .append("accessSignature")
-	  .append("=")
-	  .append(accessSignature.stringValue())
-	  .append("&")
-	  .append("playerId")
-	  .append("=")
-	  .append(myPlayerId.stringValue());
-	  String integratedUrl = sb.toString();
-	  sendMessage2(integratedUrl);
+    sb.append("newMatch/")
+      .append(myPlayerId.stringValue())
+      .append("?")
+      .append("accessSignature")
+      .append("=")
+      .append(accessSignature.stringValue());
+    String integratedUrl = sb.toString();
+    sendMessage3(integratedUrl);
   }
   
-  public JSONArray getMyLastMove() {
-    return myLastMove;
-  }
-  
-  private native void sendMessage2(String url) /*-{
+  private native void sendMessage3(String url) /*-{
     var xmlHttp;
     if($wnd.XMLHttpRequest) {
       xmlHttp = new XMLHttpRequest();
@@ -161,12 +164,45 @@ public class GameServer {
     xmlHttp.onreadystatechange = function() {
       if(xmlHttp.readyState==4 && xmlHttp.status==200) {
         var response = xmlHttp.responseText;
-        @org.client.container1.ServerMessageListener::messageListener(Ljava/lang/String;) (response);
+        @org.client.container1.ServerMessageListener::messageListener3(Ljava/lang/String;) (response);
       }
     }
     xmlHttp.open("GET", url, true);
     xmlHttp.send();
-  }-*/;
+  }-*/;  
+  
+  public void getNewState() {
+    StringBuilder sb = new StringBuilder(url);
+    sb.append("state/")
+      .append(matchId.stringValue())
+      .append("?")
+      .append("playerId")
+      .append("=")
+      .append(myPlayerId.stringValue())
+      .append("&")
+      .append("accessSignature")
+      .append("=")
+      .append(accessSignature.stringValue());
+    String integratedUrl = sb.toString();
+    sendMessage4(integratedUrl);
+  }
+  
+  private native void sendMessage4(String url) /*-{
+    var xmlHttp;
+    if($wnd.XMLHttpRequest) {
+      xmlHttp = new XMLHttpRequest();
+    }else {
+      xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");	
+    }
+    xmlHttp.onreadystatechange = function() {
+      if(xmlHttp.readyState==4 && xmlHttp.status==200) {
+        var response = xmlHttp.responseText;
+        @org.client.container1.ServerMessageListener::messageListener4(Ljava/lang/String;) (response);
+      }
+    }
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send();
+  }-*/;  
   
   private native void test(String message) /*-{
     $wnd.alert(message);
@@ -180,53 +216,64 @@ class ServerMessageListener {
   public static void setServer(GameServer gameServer) {
     ServerMessageListener.gameServer = gameServer;
   }
-	
-  private static void messageListener(String response) {
+  
+  private static void messageListener1(String response) {
     JSONObject res = JSONParser.parseStrict(response).isObject();
-    test("6666666666666666666666666666");
+    if(res != null) {
+      if(res.get("error") != null) {
+        throw new RuntimeException("Response is error");
+      }
+      JSONString matchId = res.get("matchId").isString();
+      gameServer.setMatchId(matchId);
+      gameServer.getGameContainer().updateUi(new JSONObject(), new JSONArray(), new JSONString("1"));
+    }else {
+      throw new RuntimeException("Response is null");
+    }
+  }
+  
+  private static void messageListener2(String response) {
+    JSONObject res = JSONParser.parseStrict(response).isObject();
 	if(res != null) {
-	
-	test(String.valueOf(res.size()));
-	Set<String> keys = res.keySet();
-	test(keys.toString());
-	
 	  if(res.get("error") != null) {
-		test(res.get("error").isString().stringValue());
-	    throw new RuntimeException("API Parameters Error!");
+	    throw new RuntimeException("Response is error");
 	  }
-	  if(res.size() == 2 && res.get("matchId")!=null) {
-		JSONString matchId = res.get("matchId").isString();
-	    gameServer.setMatchId(matchId);
-		gameServer.getGameContainer().updateUi(new JSONObject(), new JSONArray(), new JSONString("1"));
-      }else if(res.size() == 1 && res.get("gameState")!=null) {
-    	//test("9999999999999999999999");
-	    JSONObject state = res.get("gameState").isObject();
-		gameServer.getGameContainer().updateUi(state, gameServer.getMyLastMove(), new JSONString("1"));
-	  }else if(res.size() == 6) {
-		test(res.toString());
-		Set<String> keySet = res.keySet();
-		test(keySet.toString());
-		JSONString history = res.get("history").isString();
-		if(history!=null) {
-		  if(history.toString().equals("")) {
-			test("It is null");
-		  }
-		}
-		//test(String.valueOf(history.size()));
-		//JSONObject gameState = history.get("gameState").isObject();
-		test("kkkkkkk");
-		//JSONObject state = gameState.get("state").isObject();
-		test("nnnnnnn");
-		//JSONArray lastMove = history.get("lastMove").isArray();
-		
-		//gameServer.getGameContainer().updateUi(state, lastMove, new JSONString("1"));
-	  }else {
-	    throw new RuntimeException("Response Exception!");
-	  }
+	  JSONObject state = res.get("state").isObject();
+      gameServer.getGameContainer().updateUi(state, gameServer.getMyLastMove(), new JSONString("1"));
 	}else {
-		throw new RuntimeException("JSON Parse Error!");
+      throw new RuntimeException("Response is null");
 	}
-  }	
+  }
+  
+  private static void messageListener3(String response) {
+    JSONObject res = JSONParser.parseStrict(response).isObject();
+	if(res != null) {
+	  if(res.get("error") != null) {
+	    throw new RuntimeException("Response is error");
+	  }
+	  JSONString matchId = res.get("matchId").isString();
+	  JSONArray playerIds = res.get("playerIds").isArray();
+	  gameServer.setMatchId(matchId);
+	  gameServer.setPlayerIds(playerIds);
+	}else {
+	  throw new RuntimeException("Response is null");
+	}
+  }
+  
+  private static void messageListener4(String response) {
+    JSONObject res = JSONParser.parseStrict(response).isObject();
+    if(res != null) {
+      if(res.get("error") != null) {
+	    throw new RuntimeException("Response is error");
+	  }
+	  JSONString matchId = res.get("matchId").isString();
+	  JSONObject state = res.get("state").isObject();
+	  JSONArray lastMove = res.get("lastMove").isArray();
+	  JSONString lastMovePlayerId = new JSONString("1");
+	  gameServer.getGameContainer().updateUi(state, lastMove, lastMovePlayerId);
+	}else {
+	  throw new RuntimeException("Response is null");
+	}
+  }
   
   private static native void display(String message) /*-{
   	$doc.getElementById("text").innerHTML = message;
