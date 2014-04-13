@@ -4,7 +4,7 @@
   <inherits name = 'com.google.gwt.user.User'/>
   <inherits name='com.google.common.collect.Collect'/>
   
-  <entry-point class = 'org.client.container2.ContainerEntryPoint'/>
+  <entry-point class = 'org.client.container1.ContainerEntryPoint'/>
   
   <inherits name = "com.google.gwt.user.theme.clean.Clean"/>
   
@@ -14,6 +14,6 @@
   
   <inherits name='com.google.gwt.appengine.channel.Channel'/>
   
-  <source path='container2'/>
+  <source path='container1'/>
   
 </module>

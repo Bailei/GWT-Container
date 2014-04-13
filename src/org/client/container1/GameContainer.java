@@ -28,6 +28,13 @@ public class GameContainer {
     gameServer.sendInsertNewMatch(accessSignature, gameId, playerIds, this, myPlayerId);
   }
   
+  // Overload the insertNewMatch function for UI component One
+  public void insertNewMatch(String accessSignature, String myPlayerId, String gameId, List<String> playerIds) {
+      this.accessSignature = accessSignature;
+      this.myPlayerId = myPlayerId;
+      gameServer.sendInsertNewMatch(accessSignature, gameId, playerIds, this, myPlayerId);
+    }
+  
   public void sendMakeMove(JSONArray move) {
    	gameServer.sendMakeMove(move);
   }

@@ -1,11 +1,14 @@
 package org.client.container1;
 
 import java.util.List;
+
 import com.google.common.collect.Lists;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONObject;
@@ -14,6 +17,19 @@ import com.google.gwt.json.client.JSONArray;
 
 public class ContainerEntryPoint implements EntryPoint {
 	private static GameContainer gameContainer = null;
+	
+	/*
+	 * The variable below are all defined for UI component 1
+	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
+	 */
+	private TextBox myPlayerIDTextBox = new TextBox();
+	private TextBox opponentIDTextBox = new TextBox();
+	private TextBox gameIDTextBox = new TextBox();
+	private TextBox accessSignatureTextBox = new TextBox();
+	private Button insertNewMatchButton = new Button("Add");
+	private HorizontalPanel addPanel = new HorizontalPanel();
+	
+	
 	
 	@Override
 	public void onModuleLoad() {
@@ -44,10 +60,26 @@ public class ContainerEntryPoint implements EntryPoint {
         }
       });
       
+      /*
+       * For UI component one
+       */
+      insertNewMatchButton.addClickHandler(new ClickHandler() {
+        public void onClick(ClickEvent event) {
+          inserNewMatch();
+        }        
+      });
+      addPanel.add(myPlayerIDTextBox);
+      addPanel.add(opponentIDTextBox);
+      addPanel.add(accessSignatureTextBox);
+      addPanel.add(gameIDTextBox);
+      addPanel.add(insertNewMatchButton);
+      
+      
       FlowPanel flowPanel = new FlowPanel();
       flowPanel.add(start);
       flowPanel.add(refresh);
       flowPanel.add(end);
+      flowPanel.add(addPanel);
       RootPanel.get("mainDiv").add(flowPanel);     
 	}
 	
@@ -90,4 +122,43 @@ public class ContainerEntryPoint implements EntryPoint {
 	private static native void test(String message) /*-{
 	  alert(message);
 	}-*/;
+	
+	private void inserNewMatch() {
+        // TODO Auto-generated method stub
+        
+        
+        String myPlayerID = myPlayerIDTextBox.getText();
+        String opponentPlayerID = opponentIDTextBox.getText();
+        String gameID = gameIDTextBox.getSelectedText();
+        String accessSignature = accessSignatureTextBox.getSelectedText();
+        
+        if(!checkIfTextBoxIsValid(myPlayerID,opponentPlayerID,gameID,accessSignature)) {
+            test("Input invalid");
+            return;
+        };
+        
+        List<String> playerIds = Lists.newArrayList();
+        playerIds.add(myPlayerID);
+        playerIds.add(opponentPlayerID);
+        
+        gameContainer.insertNewMatch(accessSignature, myPlayerID, gameID, playerIds);
+        
+    }
+
+    private boolean checkIfTextBoxIsValid(String myPlayerID, String opponentPlayerID,
+            String gameID, String accessSignature) {
+        if(myPlayerID.isEmpty())
+            return false;
+        if(opponentPlayerID.isEmpty())
+            return false;
+        if(gameID.isEmpty())
+            return false;
+        if(accessSignature.isEmpty())
+            return false;
+        // TODO Auto-generated method stub
+        
+        
+        return false;
+        
+    }
 }
