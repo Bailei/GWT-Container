@@ -191,6 +191,7 @@ public class GameServer {
   
   public void addTimer() {
       timerForCountDown = new MyTimer(countdown, this);
+      timerForCountDown.scheduleRepeating(1000);
   }
   
   public void closeTimer() {
