@@ -1,17 +1,23 @@
 package org.client.container2;
 
 import com.google.gwt.json.client.*;
+import com.google.gwt.user.client.ui.Label;
 
-public class GameContainer {  
-  private final GameServer gameServer = new GameServer();
-  //private String myPlayerId = "4812957531766784";
-  //private String accessSignature = "ab0a72e65ac347f20160503ecd814dfa";
+public class GameContainer {
+    
+  //private final GameServer gameServer = new GameServer();
+  
+  private final GameServer gameServer;
+ 
   
   private String myPlayerId = "6022506221666304";
   private String accessSignature = "e574f5726c00421bec1cfd05e7c5af5";
 	
-  public GameContainer() {
+  public GameContainer(Label countdown) {
+      gameServer = new GameServer(countdown);
   }
+  
+  
   
   public void sendEnterQueue(JSONString gameId) {
     gameServer.sendEnterQueue(

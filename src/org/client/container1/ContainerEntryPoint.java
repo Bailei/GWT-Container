@@ -158,7 +158,7 @@ public class ContainerEntryPoint implements EntryPoint {
         // TODO Auto-generated method stub
         
         
-        return false;
+        return true;
         
     }
 }

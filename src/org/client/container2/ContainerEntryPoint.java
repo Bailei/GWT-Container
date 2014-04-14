@@ -3,8 +3,8 @@ package org.client.container2;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -12,10 +12,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 public class ContainerEntryPoint implements EntryPoint {
 	private static GameContainer gameContainer = null;
 	
+	// For the countdown
+	private Label countdown = new Label();
+	
 	@Override
 	public void onModuleLoad() {
 	  setListener();
-	  gameContainer = new GameContainer();
+	  gameContainer = new GameContainer(countdown);
 	  
 	  Button close = new Button("close socket");
 	  
@@ -26,6 +29,7 @@ public class ContainerEntryPoint implements EntryPoint {
 	    }
 	  });
 	  
+	  RootPanel.get("mainDiv").add(countdown);
 	  RootPanel.get("mainDiv").add(close);
 	}
 	

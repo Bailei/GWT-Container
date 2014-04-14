@@ -1,8 +1,15 @@
 package org.client.container2;
 
+import java.util.List;
 import java.util.Set;
+
+import org.client.container1.GameApi.SetTurn;
+import org.client.container2.GameApi.Operation;
+
 import com.google.gwt.json.client.*;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.appengine.channel.client.ChannelFactory;
 import com.google.gwt.appengine.channel.client.Channel;
 import com.google.gwt.appengine.channel.client.Socket;
@@ -28,8 +35,16 @@ public class GameServer {
   private GameContainer gameContainer;
   private JSONString myPlayerId = null;
   
-  public GameServer() {
+  // For the countdown
+  private Label countdown = null;
+  private MyTimer timerForCountDown = null;
+  
+  public GameServer(Label countdown) {
     ServerMessageListener.setServer(this);
+    
+    
+    // For the countdown
+    this.countdown = countdown;
   }  
   
   public void closeSocket() {
@@ -135,6 +150,10 @@ public class GameServer {
   }
 	
   public void sendMakeMove(JSONArray operations) {
+      // For countdown
+      closeTimer();
+      
+      
 	myLastMove = operations;
 	StringBuilder sb = new StringBuilder(url);
 	sb.append("matches/")
@@ -168,6 +187,14 @@ public class GameServer {
   
   public JSONArray getMyLastMove() {
     return myLastMove;
+  }
+  
+  public void addTimer() {
+      timerForCountDown = new MyTimer(countdown, this);
+  }
+  
+  public void closeTimer() {
+      timerForCountDown.cancel();
   }
  
   private native void test(String message) /*-{
@@ -287,6 +314,19 @@ class ServerMessageListener {
     	if(state_JSON!=null) {
     	  JSONObject state = state_JSON.isObject();
     	  JSONArray lastMove = response.get("lastMove").isArray();
+    	  
+    	  // Below are for countdown
+    	  List<Operation> lastMoveOperations = jds.deserializeMove(lastMove);
+    	 
+    	  // How to get the lastMoveID
+    	  String lastMoveID
+    	  if(lastMoveID.equals(gameServer.getMyPlayerId())){
+    	      gameServer.addTimer();
+    	  };
+    	 // String lastMoveID = (SetTurn)jds.deserializeMove(lastMove).get(0).getPlayerID()
+    	          
+    	  
+    	  
     	  JSONString lastMovePlayerId = new JSONString("1");
     	  gameServer.getGameContainer().updateUi(state, lastMove, lastMovePlayerId, gameServer.getPlayerIds());
     	}
